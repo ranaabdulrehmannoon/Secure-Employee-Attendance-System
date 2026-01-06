@@ -17,7 +17,7 @@ The system is post-quantum ready with encryption, authentication, and integrity 
 - Provide audit-ready logs and report generation
 
 ## 🛠️ Technologies Used
-- Component	Technology / Implementation
+
 - Frontend	HTML, CSS, JavaScript
 - Backend	Python, FastAPI
 - Database	SQLite with encrypted fields (SQLAlchemy)
