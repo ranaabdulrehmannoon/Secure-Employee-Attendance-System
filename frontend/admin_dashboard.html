@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Employee Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e17 0%, #141a2c 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dashboard-container {
+            width: 97%;
+            height: 96vh;
+            margin: 2vh auto;
+            background: rgba(20, 25, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            border: 1px solid rgba(80, 90, 120, 0.3);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #121826 0%, #1a2238 100%);
+            color: #e0e0e0;
+            padding: 22px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(80, 90, 120, 0.4);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .dashboard-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            color: #f0f0f0;
+        }
+
+        .dashboard-header h1 i {
+            color: #4cc9f0;
+            font-size: 28px;
+        }
+
+        #logout-btn {
+            background: linear-gradient(135deg, #c2185b 0%, #880e4f 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(194, 24, 91, 0.4);
+        }
+
+        #logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(194, 24, 91, 0.6);
+            background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%);
+        }
+
+        .content-section {
+            padding: 25px 35px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title i {
+            color: #4cc9f0;
+            font-size: 24px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(30, 35, 50, 0.8);
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(80, 90, 120, 0.4);
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+
+        .search-box i {
+            color: #4cc9f0;
+            font-size: 16px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #f0f0f0;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        #refresh-btn {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.4);
+        }
+
+        #refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(21, 101, 192, 0.6);
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        }
+
+        #refresh-btn:hover i {
+            transform: rotate(180deg);
+        }
+
+        #refresh-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .alert-container {
+            margin-bottom: 20px;
+            min-height: 0;
+            flex-shrink: 0;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            border-left: 5px solid;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            color: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .alert-refresh {
+            background: linear-gradient(135deg, #006064 0%, #00838f 100%);
+            color: #e0f7fa;
+            border-left-color: #00bcd4;
+        }
+
+        .alert.hidden {
+            display: none;
+        }
+
+        .table-container {
+            background: rgba(30, 35, 50, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(80, 90, 120, 0.4);
+            overflow: auto;
+            flex: 1;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #1a2238 0%, #121826 100%);
+            color: #e0e0e0;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border-right: 1px solid rgba(80, 90, 120, 0.4);
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid rgba(76, 201, 240, 0.4);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        th i {
+            margin-right: 8px;
+            font-size: 15px;
+            color: #4cc9f0;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(80, 90, 120, 0.3);
+            font-size: 14px;
+            color: #d0d0d0;
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(40, 45, 60, 0.3);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(60, 65, 80, 0.5);
+            box-shadow: inset 0 0 0 1px rgba(76, 201, 240, 0.3);
+        }
+
+        tbody tr:hover td {
+            color: #ffffff;
+        }
+
+        .status-present {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.4);
+        }
+
+        .status-absent {
+            background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(198, 40, 40, 0.4);
+        }
+
+        .employee-id {
+            font-family: 'Courier New', monospace;
+            background: rgba(40, 45, 60, 0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid rgba(80, 90, 120, 0.4);
+            color: #f0f0f0;
+            display: inline-block;
+        }
+
+        .coordinates {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #4cc9f0;
+            background: rgba(30, 35, 50, 0.6);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 500;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+        }
+
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #d0d0d0;
+            background: rgba(40, 45, 60, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(80, 90, 120, 0.3);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #4cc9f0 0%, #3a9fd8 100%);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(76, 201, 240, 0.4);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 201, 240, 0.6);
+            background: linear-gradient(135deg, #5dd9ff 0%, #4cc9f0 100%);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a2238 0%, #0f1419 100%);
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 900px;
+            width: 95%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(80, 90, 120, 0.4);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(76, 201, 240, 0.4);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            color: #f0f0f0;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header h2 i {
+            color: #4cc9f0;
+        }
+
+        .close-btn {
+            background: linear-gradient(135deg, #c2185b 0%, #880e4f 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%);
+        }
+
+        .modal-body {
+            color: #d0d0d0;
+            line-height: 1.6;
+        }
+
+        .modal-body h3 {
+            color: #f0f0f0;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            border-left: 3px solid #4cc9f0;
+            padding-left: 10px;
+        }
+
+        .modal-body h3 i {
+            color: #4cc9f0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: rgba(30, 35, 50, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #4cc9f0;
+        }
+
+        .info-item strong {
+            color: #4cc9f0;
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .info-item span {
+            color: #f0f0f0;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.2) 0%, rgba(60, 65, 80, 0.3) 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(76, 201, 240, 0.4);
+        }
+
+        .stat-card .value {
+            color: #4cc9f0;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: #a0a0a0;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(30, 35, 50, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .history-table th {
+            background: linear-gradient(135deg, #0f1419 0%, #1a2238 100%);
+            color: #4cc9f0;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            border-bottom: 2px solid rgba(76, 201, 240, 0.4);
+            text-transform: uppercase;
+        }
+
+        .history-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(80, 90, 120, 0.3);
+            font-size: 13px;
+        }
+
+        .history-table tbody tr:hover {
+            background-color: rgba(60, 65, 80, 0.4);
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(80, 90, 120, 0.4);
+        }
+
+        .report-btn {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+        }
+
+        .report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.6);
+            background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 98%;
+                padding: 20px;
+            }
+        }
+
+        /* Fix for table row hover distortion */
+        tbody tr {
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        tbody tr td {
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        #employeeMgmtModal table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #employeeMgmtModal table th {
+            background: linear-gradient(135deg, #1a2238 0%, #121826 100%);
+            color: #e0e0e0;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border-right: 1px solid rgba(80, 90, 120, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid rgba(76, 201, 240, 0.4);
+        }
+
+        #employeeMgmtModal table th:last-child {
+            border-right: none;
+        }
+
+        #employeeMgmtModal table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(80, 90, 120, 0.3);
+            font-size: 14px;
+            color: #d0d0d0;
+        }
+
+        #employeeMgmtModal tbody tr:nth-child(even) {
+            background-color: rgba(40, 45, 60, 0.3);
+        }
+
+        #employeeMgmtModal tbody tr:hover {
+            background-color: rgba(60, 65, 80, 0.5);
+        }
+
+        #employeeMgmtModal tbody tr:hover td {
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+            <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+
+        <div class="content-section">
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <button id="today-btn" style="background: linear-gradient(135deg, #4cc9f0 0%, #0ea5e9 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(76, 201, 240, 0.4); transition: all 0.3s ease;">
+                    <i class="fas fa-calendar-check"></i> Today's Attendance
+                </button>
+                <button id="mgmt-btn" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); transition: all 0.3s ease;">
+                    <i class="fas fa-briefcase"></i> Employees Management
+                </button>
+                <button id="biometric-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: all 0.3s ease;">
+                    <i class="fas fa-check-circle"></i> Attendance Approvals <span id="biometric-badge" style="display: none; background: #ff4757; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;"></span>
+                </button>
+            </div>
+
+            <div id="alert-container">
+                <div class="alert alert-success hidden" id="status-alert">
+                    <i class="fas fa-check-circle"></i> <span id="alert-message">Data loaded successfully</span>
+                </div>
+            </div>
+
+            <div id="attendance-section" style="display: flex; flex-direction: column; flex: 1;">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-calendar-check"></i> Today's Attendance</h2>
+                    <button id="refresh-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Employee Name</th>
+                                <th><i class="fas fa-id-badge"></i> Employee ID</th>
+                                <th><i class="fas fa-building"></i> Department</th>
+                                <th><i class="fas fa-briefcase"></i> Position</th>
+                                <th><i class="fas fa-envelope"></i> Email</th>
+                                <th><i class="fas fa-clock"></i> Marked At</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                                <th><i class="fas fa-actions"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="mgmt-section" style="display: none; flex-direction: column; flex: 1;">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-users"></i> Employees Management</h2>
+                    <div class="search-box" style="flex: 1; min-width: 250px; max-width: 400px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="mgmt-search-input" placeholder="Search by name, ID, department, or email...">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Employee Name</th>
+                                <th><i class="fas fa-id-badge"></i> Employee ID</th>
+                                <th><i class="fas fa-building"></i> Department</th>
+                                <th><i class="fas fa-briefcase"></i> Position</th>
+                                <th><i class="fas fa-envelope"></i> Email</th>
+                                <th><i class="fas fa-chart-pie"></i> Attendance Rate</th>
+                                <th><i class="fas fa-check"></i> Present</th>
+                                <th><i class="fas fa-times"></i> Absent</th>
+                                <th><i class="fas fa-calendar-alt"></i> Last Attendance</th>
+                                <th><i class="fas fa-actions"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mgmt-employees-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="biometric-section" style="display: none; flex-direction: column; flex: 1;">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-check-circle"></i> Attendance Approval</h2>
+                    <button id="biometric-refresh-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Employee Name</th>
+                                <th><i class="fas fa-id-badge"></i> Employee ID</th>
+                                <th><i class="fas fa-envelope"></i> Email</th>
+                                <th><i class="fas fa-camera"></i> Photo</th>
+                                <th><i class="fas fa-face-smile"></i> Face</th>
+                                <th><i class="fas fa-clock"></i> Requested At</th>
+                                <th><i class="fas fa-check-circle"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="biometric-requests-body">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-biometric-requests" style="text-align: center; padding: 40px; color: #888;">
+                    <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p>No pending attendance approvals</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-history"></i> Employee Attendance History</h2>
+                <button class="close-btn" onclick="closeHistoryModal()"><i class="fas fa-times"></i> Close</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div style="text-align: center; color: #666;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #4cc9f0;"></i> Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.getElementById('status-alert');
+            
+            alert.querySelector('#alert-message').textContent = message;
+            alert.className = `alert alert-${type === 'success' ? 'success' : 'refresh'}`;
+            alert.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+
+        let todayAttendance = [];
+        let allEmployees = [];
+
+        async function loadTodayAttendance() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/admin/all-attendance`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch today\'s attendance');
+                }
+                todayAttendance = await response.json();
+                displayTodayAttendance(todayAttendance);
+                showAlert(`${todayAttendance.length} present employees today`, 'success');
+            } catch (error) {
+                console.error('Error loading today\'s attendance:', error);
+                showAlert('Failed to load today\'s attendance: ' + error.message, 'refresh');
+            }
+        }
+
+        function displayTodayAttendance(records) {
+            const tbody = document.getElementById('attendance-body');
+            tbody.innerHTML = '';
+            
+            if (records.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #888;">
+                            No attendance records for today
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${record.employee_name}</strong></td>
+                    <td><span class="employee-id">${record.employee_id}</span></td>
+                    <td>${record.department}</td>
+                    <td>${record.position}</td>
+                    <td style="font-size: 12px; color: #999;">${record.email || 'N/A'}</td>
+                    <td><span class="time-display">${record.marked_at || 'N/A'}</span></td>
+                    <td>${record.location_name || 'N/A'}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewEmployeeHistory('${record.employee_name}', '${record.employee_id}')">
+                            <i class="fas fa-history"></i> View
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function loadAllEmployeesStats() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/admin/all-employees-stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch employees stats');
+                }
+                allEmployees = await response.json();
+                displayAllEmployees(allEmployees);
+            } catch (error) {
+                console.error('Error loading all employees:', error);
+                showAlert('Failed to load employees: ' + error.message, 'refresh');
+            }
+        }
+
+        function displayAllEmployees(employees) {
+            const tbody = document.getElementById('mgmt-employees-body');
+            tbody.innerHTML = '';
+            
+            if (employees.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" style="text-align: center; padding: 40px; color: #888;">
+                            No employees found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            employees.forEach(emp => {
+                const row = document.createElement('tr');
+                const attendanceRateColor = emp.attendance_rate >= 80 ? '#4caf50' : 
+                                           emp.attendance_rate >= 60 ? '#ff9800' : '#f44336';
+                
+                row.innerHTML = `
+                    <td><strong>${emp.full_name}</strong></td>
+                    <td><span class="employee-id">${emp.employee_id}</span></td>
+                    <td>${emp.department}</td>
+                    <td>${emp.position}</td>
+                    <td style="font-size: 12px; color: #999;">${emp.email || 'N/A'}</td>
+                    <td><span style="color: ${attendanceRateColor}; font-weight: 700;">${emp.attendance_rate}%</span></td>
+                    <td><span style="color: #4caf50; font-weight: 600;">${emp.present_count}</span></td>
+                    <td><span style="color: #f44336; font-weight: 600;">${emp.absent_count}</span></td>
+                    <td><span class="time-display">${emp.last_attendance}</span></td>
+                    <td>
+                        <button class="action-btn" onclick="viewEmployeeHistory('${emp.full_name}', '${emp.employee_id}')">
+                            <i class="fas fa-history"></i> View
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterMgmtEmployees() {
+            const searchTerm = document.getElementById('mgmt-search-input').value.toLowerCase();
+            
+            const filtered = allEmployees.filter(emp => {
+                return emp.full_name.toLowerCase().includes(searchTerm) ||
+                       emp.employee_id.toLowerCase().includes(searchTerm) ||
+                       emp.department.toLowerCase().includes(searchTerm) ||
+                       emp.email.toLowerCase().includes(searchTerm);
+            });
+            
+            displayAllEmployees(filtered);
+        }
+
+        function openEmployeeMgmtModal() {
+            document.getElementById('attendance-section').style.display = 'none';
+            document.getElementById('mgmt-section').style.display = 'flex';
+            loadAllEmployeesStats();
+        }
+
+        function closeEmployeeMgmtModal() {
+            document.getElementById('attendance-section').style.display = 'flex';
+            document.getElementById('mgmt-section').style.display = 'none';
+        }
+
+        async function viewEmployeeHistory(employeeName, employeeId) {
+            const modal = document.getElementById('historyModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            try {
+                const token = localStorage.getItem('token');
+                
+                const response = await fetch(`${API_BASE}/api/admin/employees-list`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Failed to fetch employees list');
+                
+                const employees = await response.json();
+                const employee = employees.find(e => e.employee_id === employeeId);
+                
+                if (!employee) throw new Error('Employee not found');
+                
+                const historyResponse = await fetch(`${API_BASE}/api/admin/employee-attendance-history/${employee.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!historyResponse.ok) throw new Error('Failed to fetch attendance history');
+                
+                const history = await historyResponse.json();
+                
+                let historyHTML = `
+                    <h3><i class="fas fa-user-circle"></i> Employee Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <strong>Full Name</strong>
+                            <span>${history.employee_name}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Employee ID</strong>
+                            <span>${history.employee_id}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Department</strong>
+                            <span>${history.department}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Position</strong>
+                            <span>${history.position}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Email</strong>
+                            <span style="color: #999;">${history.email || 'N/A'}</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>Period</strong>
+                            <span>${history.start_date} to ${history.end_date}</span>
+                        </div>
+                    </div>
+                    
+                    <h3><i class="fas fa-chart-bar"></i> Attendance Summary</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="value">${history.total_days}</div>
+                            <div class="label">Total Days</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" style="color: #4caf50;">${history.present_days}</div>
+                            <div class="label">Present</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="value" style="color: #f44336;">${history.absent_days}</div>
+                            <div class="label">Absent</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" style="grid-column: span 1; text-align: center; margin-top: 10px;">
+                        <div class="value">${history.attendance_rate}%</div>
+                        <div class="label">Attendance Rate</div>
+                    </div>
+                    
+                    <h3><i class="fas fa-calendar-check"></i> Detailed Records</h3>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                if (history.attendance_records && history.attendance_records.length > 0) {
+                    history.attendance_records.forEach(record => {
+                        const statusClass = record.status === 'present' ? 'present' : 'absent';
+                        const statusIcon = record.status === 'present' ? 'check-circle' : 'times-circle';
+                        historyHTML += `
+                            <tr>
+                                <td>${record.date}</td>
+                                <td><span class="status-${statusClass}"><i class="fas fa-${statusIcon}"></i> ${record.status.toUpperCase()}</span></td>
+                                <td>${record.marked_at}</td>
+                                <td>${record.location}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    historyHTML += `
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #666;">No records found</td>
+                        </tr>
+                    `;
+                }
+                
+                historyHTML += `
+                        </tbody>
+                    </table>
+                    
+                    <div class="report-actions">
+                        <button class="report-btn" onclick="generateReport('${employee.id}', '${history.employee_id}', '${history.employee_name}')">
+                            <i class="fas fa-download"></i> Download Report (TXT)
+                        </button>
+                        <button class="report-btn" style="background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); box-shadow: 0 4px 12px rgba(21, 101, 192, 0.4);" onclick="printReport()">
+                            <i class="fas fa-print"></i> Print Report
+                        </button>
+                    </div>
+                `;
+                
+                modalBody.innerHTML = historyHTML;
+                modal.classList.add('show');
+                
+            } catch (error) {
+                console.error('Error loading history:', error);
+                modalBody.innerHTML = `
+                    <div style="text-align: center; color: #f44336;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function closeHistoryModal() {
+            const modal = document.getElementById('historyModal');
+            modal.classList.remove('show');
+        }
+
+        async function generateReport(employeeId, employeeIdStr, employeeName) {
+            try {
+                const token = localStorage.getItem('token');
+                
+                const response = await fetch(`${API_BASE}/api/admin/generate-report/${employeeId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Failed to generate report');
+                
+                const data = await response.json();
+                const element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data.report));
+                element.setAttribute('download', data.filename);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+                
+                showAlert('Report downloaded successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error generating report:', error);
+                showAlert('Failed to generate report: ' + error.message, 'refresh');
+            }
+        }
+
+        function printReport() {
+            const printContent = document.getElementById('modalBody').innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<pre>' + printContent.replace(/<[^>]*>/g, '') + '</pre>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('historyModal');
+            if (event.target === modal) {
+                closeHistoryModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+            
+            if (!token || role !== 'admin') {
+                alert('Access denied. Please login as Admin.');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            loadTodayAttendance();
+            
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                showAlert('Logging out...', 'refresh');
+                setTimeout(() => {
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                }, 1000);
+            });
+            
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                showAlert('Refreshing today\'s attendance...', 'refresh');
+                loadTodayAttendance();
+            });
+
+            document.getElementById('today-btn').addEventListener('click', function() {
+                closeEmployeeMgmtModal();
+            });
+
+            document.getElementById('mgmt-btn').addEventListener('click', function() {
+                openEmployeeMgmtModal();
+            });
+
+            document.getElementById('mgmt-search-input').addEventListener('keyup', function() {
+                filterMgmtEmployees();
+            });
+
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('employeeMgmtModal');
+                if (event.target === modal) {
+                    closeEmployeeMgmtModal();
+                }
+            });
+            
+            setInterval(loadTodayAttendance, 60000);
+        });
+    </script>
+    <script src="js/config.js"></script>
+    <script src="js/admin-biometric.js"></script>
+    <script src="js/inactivity.js"></script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Attendance System</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' fill='%23FFD700'>A</text></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary-dark: #050811;
+            --card-bg: rgba(22, 28, 40, 0.8);
+            --accent-blue: #4A90E2;
+            --accent-teal: #00D1A0;
+            --accent-purple: #B57EDC;
+            --accent-gold: #FFD700;
+            --accent-pink: #fa709a;
+            --accent-yellow: #fee140;
+            --text-primary: #E0E6F0;
+            --text-secondary: #AAB3C7;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Background Animations */
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.1;
+            animation: move 20s infinite linear;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent-pink);
+            top: -150px;
+            right: -150px;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent-yellow);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes move {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, 50px) rotate(90deg); }
+            50% { transform: translate(0, 100px) rotate(180deg); }
+            75% { transform: translate(-30px, 50px) rotate(270deg); }
+        }
+
+        /* Admin Crown Badge */
+        .role-badge {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-yellow));
+            color: var(--primary-dark);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 5px 15px rgba(250, 112, 154, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .role-badge i {
+            font-size: 1.3rem;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--accent-blue), #266DD3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            border-color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.05);
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.2);
+            outline: none;
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* OTP Container */
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .otp-input {
+            flex: 1;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: linear-gradient(135deg, var(--accent-blue), #266DD3);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Send OTP Button - FIXED to match employee page */
+        #request-otp {
+            background: linear-gradient(135deg, var(--accent-purple), #915CB0);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 1rem 1.5rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            height: 100%;
+            min-height: 52px; /* Match input height */
+        }
+
+        #request-otp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(181, 126, 220, 0.4);
+        }
+
+        /* Link */
+        .link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .link a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .link a:hover {
+            color: var(--accent-teal);
+            transform: translateX(-5px);
+        }
+
+        /* Alert Styles - ADDED BEAUTIFUL OTP SUCCESS MESSAGE */
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-weight: 600;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            border: 1px solid;
+            text-align: center;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(0, 209, 160, 0.15);
+            color: var(--accent-teal);
+            border-color: var(--accent-teal);
+            box-shadow: 0 5px 15px rgba(0, 209, 160, 0.2);
+        }
+
+        .alert-error {
+            background: rgba(255, 69, 96, 0.1);
+            color: #FF4560;
+            border-color: #FF4560;
+        }
+
+        .alert-info {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .role-badge {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .otp-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            #request-otp {
+                width: 100%;
+                min-height: 52px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .role-badge {
+                font-size: 0.85rem;
+                padding: 0.7rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Background Shapes -->
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+        
+        <!-- Admin Role Badge -->
+        <div class="role-badge">
+            <i class="fas fa-crown"></i>
+            ADMINISTRATOR LOGIN
+        </div>
+        
+        <h1>Login to Dashboard</h1>
+        
+        <!-- Login Section -->
+        <div id="login-section">
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>EMAIL ADDRESS
+                    </label>
+                    <input type="email" id="email" required placeholder="Enter your email address">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>PASSWORD
+                    </label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                
+                <div class="form-group" id="security-group">
+                    <label for="security-answer">
+                        <i class="fas fa-shield-alt"></i>SECURITY ANSWER
+                    </label>
+                    <input type="text" id="security-answer" required placeholder="Answer your security question">
+                </div>
+                
+                <div class="form-group" id="otp-group">
+                    <label for="otp">
+                        <i class="fas fa-key"></i>ONE-TIME PASSWORD
+                    </label>
+                    <div class="otp-container">
+                        <input type="text" id="otp" class="otp-input" maxlength="6" required placeholder="Enter 6-digit OTP">
+                        <button type="button" id="request-otp">
+                            <i class="fas fa-paper-plane"></i>Send OTP
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-sign-in-alt"></i>Login to Dashboard
+                </button>
+            </form>
+            
+            <div class="link">
+                <p><a href="role-select.html">
+                    <i class="fas fa-arrow-left"></i>Back to Role Selection
+                </a></p>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const ROLE_TYPE = 'admin';
+        
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            document.getElementById('alert-container').appendChild(alertDiv);
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                alertDiv.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        const requestOtpBtn = document.getElementById('request-otp');
+        if (requestOtpBtn) {
+            requestOtpBtn.addEventListener('click', async () => {
+                const email = document.getElementById('email').value;
+                
+                if (!email) {
+                    showAlert('❌ Please enter your email first', 'error');
+                    return;
+                }
+                
+                if (!email.includes('@')) {
+                    showAlert('❌ Please enter a valid email address', 'error');
+                    return;
+                }
+                
+                const originalText = requestOtpBtn.innerHTML;
+                requestOtpBtn.disabled = true;
+                requestOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                
+                try {
+                    const response = await fetch(`${API_BASE}/api/auth/request-otp?email=${encodeURIComponent(email)}`, {
+                        method: 'POST'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showAlert(`✅ <strong>OTP Sent Successfully!</strong><br>A 6-digit verification code has been sent to ${email}.`, 'success');
+                    } else {
+                        showAlert('❌ ' + (data.detail || 'Failed to send OTP'), 'error');
+                    }
+                } catch (error) {
+                    showAlert('❌ Cannot reach backend server', 'error');
+                    console.error('OTP Error:', error);
+                } finally {
+                    requestOtpBtn.disabled = false;
+                    requestOtpBtn.innerHTML = originalText;
+                }
+            });
+        }
+        
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const securityAnswer = document.getElementById('security-answer').value;
+                const otp = document.getElementById('otp').value;
+                
+                if (!email || !password || !securityAnswer || !otp) {
+                    showAlert('❌ Please fill in all fields', 'error');
+                    return;
+                }
+                
+                if (otp.length !== 6) {
+                    showAlert('❌ OTP must be 6 digits', 'error');
+                    return;
+                }
+                
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+                
+                try {
+                    const loginData = {
+                        email,
+                        password,
+                        security_answer: securityAnswer,
+                        otp
+                    };
+                    
+                    const response = await fetch(`${API_BASE}/api/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showAlert('✅ <strong>Login Successful!</strong><br>Redirecting to admin dashboard...', 'success');
+                        
+                        localStorage.setItem('token', data.access_token);
+                        localStorage.setItem('role', data.role);
+                        
+                        setTimeout(() => {
+                            window.location.href = 'admin_dashboard.html';
+                        }, 2000);
+                    } else {
+                        const errorMsg = data.detail || 'Login failed';
+                        if (errorMsg.toLowerCase().includes('password')) {
+                            showAlert('❌ Invalid password', 'error');
+                        } else if (errorMsg.toLowerCase().includes('security')) {
+                            showAlert('❌ Incorrect security answer', 'error');
+                        } else if (errorMsg.toLowerCase().includes('otp')) {
+                            showAlert('❌ Invalid or expired OTP', 'error');
+                        } else {
+                            showAlert('❌ ' + errorMsg, 'error');
+                        }
+                    }
+                } catch (error) {
+                    showAlert('❌ Cannot reach backend server', 'error');
+                    console.error('Login Error:', error);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            });
+        }
+        
+        // Input focus effects
+        document.getElementById('email').addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+        
+        document.getElementById('email').addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+        
+        // Add focus effects to other inputs
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+        
+        window.addEventListener('load', () => {
+            document.getElementById('email').focus();
+        });
+    </script>
+</body>
+</html>

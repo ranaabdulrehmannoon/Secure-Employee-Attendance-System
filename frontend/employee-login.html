@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Employee Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #050811;
+            --glass-bg: rgba(22, 28, 40, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-blue: #4A90E2;
+            --accent-teal: #00D1A0;
+            --accent-purple: #B57EDC;
+            --accent-orange: #FF9A3D;
+            --text-primary: #E0E6F0;
+            --text-secondary: #AAB3C7;
+            --transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            --page-transition: all 0.9s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Page Container */
+        .page-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Page Transition Animation */
+        .page-slide-left {
+            animation: slideLeftOut 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        .page-slide-right {
+            animation: slideRightIn 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        @keyframes slideLeftOut {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100%); opacity: 0; }
+        }
+
+        @keyframes slideRightIn {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Left Panel - Hero Section */
+        .left-panel {
+            flex: 0 0 50%;
+            background: linear-gradient(135deg, rgba(0, 209, 160, 0.1), rgba(0, 153, 102, 0.05));
+            padding: 2rem 6rem 8rem 6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 100vh;
+            transition: var(--page-transition);
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-teal), transparent);
+        }
+
+        /* Right Panel - Auth Section */
+        .right-panel {
+            flex: 1;
+            padding: 2rem 4rem 18rem 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            position: relative;
+            transition: var(--page-transition);
+        }
+
+        #signupRightPanel {
+            padding: 4rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.12;
+        }
+
+        .shape-1 {
+            width: 350px;
+            height: 350px;
+            background: var(--accent-teal);
+            top: 15%;
+            left: 5%;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        .shape-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--accent-blue);
+            bottom: 15%;
+            right: 5%;
+            animation: float 20s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, 50px) scale(1.05); }
+            50% { transform: translate(0, 100px) scale(1); }
+            75% { transform: translate(-30px, 50px) scale(0.95); }
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1.1rem 2.2rem;
+            background: linear-gradient(135deg, var(--accent-purple), #8A2BE2);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+            animation: softPulse 4s infinite;
+        }
+
+        @keyframes softPulse {
+            0%, 100% { box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6); transform: scale(1.03); }
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 35px rgba(138, 43, 226, 0.7);
+        }
+
+        /* Hero Content */
+        .hero-content {
+            text-align: center;
+            margin: 2rem 0 4rem 0;
+            transition: var(--transition);
+        }
+
+        .welcome-icon {
+            font-size: 4.5rem;
+            color: var(--accent-teal);
+            margin-bottom: 2.5rem;
+            filter: drop-shadow(0 0 25px rgba(0, 209, 160, 0.4));
+            animation: gentleFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-8px) rotate(1deg); }
+            66% { transform: translateY(4px) rotate(-1deg); }
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-teal), #00b377);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            line-height: 1.7;
+            margin-bottom: 4rem;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Create Account Circle */
+        .circle-container {
+            position: relative;
+            margin: 3rem 0;
+        }
+
+        .circle-btn {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, var(--accent-teal), #009966);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+            border: 5px solid rgba(0, 209, 160, 0.4);
+            cursor: pointer;
+            animation: gentleFloat 5s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        .circle-btn:hover {
+            transform: scale(1.15) rotate(-5deg);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 80px rgba(0, 209, 160, 0.6);
+        }
+
+        .circle-btn i {
+            font-size: 3.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .circle-btn-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.6px;
+            line-height: 1.3;
+        }
+
+        .circle-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            opacity: 0.8;
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            margin-top: 3rem;
+            text-align: left;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-list li {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .features-list li i {
+            color: var(--accent-teal);
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 2rem;
+        }
+
+        /* Auth Container */
+        .auth-container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Login Header */
+        .login-header {
+            text-align: left;
+            margin-bottom: 3rem;
+            margin-top: 1rem;
+        }
+
+        .header-title-row {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--accent-blue);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .login-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .login-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 100%;
+            line-height: 1.6;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+            transform: translateY(-50%);
+            z-index: 1;
+            transition: var(--transition);
+            width: 0%;
+        }
+
+        .progress-step {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+            font-size: 1.2rem;
+        }
+
+        .progress-step.active {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+            transform: scale(1.1);
+        }
+
+        .progress-step.completed {
+            background: var(--accent-teal);
+            border-color: transparent;
+            color: white;
+        }
+
+        /* Glass Form */
+        .glass-form {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            animation: formSlideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes formSlideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-form:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1.2rem 1.2rem 1.2rem 3.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.08);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus + .input-icon {
+            color: var(--accent-blue);
+        }
+
+        /* Fix for select options readability */
+        select.form-input option {
+            background-color: var(--primary-dark);
+            color: var(--text-primary);
+            padding: 10px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--accent-blue), #266DD3);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            padding: 1rem 1.8rem;
+            background: rgba(0, 209, 160, 0.12);
+            border: 1.5px solid var(--accent-teal);
+            border-radius: 10px;
+            color: var(--accent-teal);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 209, 160, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 209, 160, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-tertiary {
+            padding: 1rem 1.8rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Biometric Section */
+        .biometric-section {
+            background: rgba(0, 212, 255, 0.1);
+            border: 2px solid rgba(0, 212, 255, 0.4);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .biometric-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .biometric-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-teal), rgba(0, 209, 160, 0.3));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .biometric-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), #266DD3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .biometric-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .biometric-capture {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .biometric-video {
+            width: 100%;
+            max-height: 280px;
+            border-radius: 14px;
+            background: #000;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .capture-status {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            color: var(--accent-teal);
+            font-weight: 600;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 209, 160, 0.1);
+            border-radius: 14px;
+            border: 1px solid rgba(0, 209, 160, 0.2);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1.2rem 1.5rem;
+            border-radius: 14px;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: rgba(0, 209, 160, 0.12);
+            border: 1px solid rgba(0, 209, 160, 0.3);
+            color: var(--accent-teal);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 157, 0.12);
+            border: 1px solid rgba(255, 107, 157, 0.3);
+            color: #FF4560;
+        }
+
+        .alert-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Password Requirements */
+        .password-requirements {
+            margin-top: 1rem;
+        }
+
+        .requirements-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .password-requirement {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .password-requirement.met {
+            background: rgba(0, 209, 160, 0.15);
+            border-color: var(--accent-teal);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(0, 209, 160, 0.2);
+        }
+
+        .password-requirement.met i {
+            color: var(--accent-teal);
+            text-shadow: 0 0 5px var(--accent-teal);
+        }
+
+        /* Step Navigation */
+        .step-navigation {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .page-container {
+                flex-direction: column;
+            }
+
+            .left-panel, .right-panel {
+                flex: none;
+                width: 100%;
+                min-height: auto;
+                padding: 2.5rem;
+            }
+
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .circle-btn {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .circle-btn i {
+                font-size: 3rem;
+            }
+            
+            .login-title {
+                font-size: 2.2rem;
+            }
+            
+            .progress-step {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+    </div>
+
+    <!-- Login Page -->
+    <div class="page-container" id="loginPage">
+        <!-- Left Panel -->
+        <div class="left-panel" id="leftPanel">
+            <div class="nav-bar">
+                <a href="role-select.html" class="back-btn" id="backBtn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Selection Role
+                </a>
+            </div>
+
+            <div class="hero-content">
+                <div class="welcome-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                
+                <h1 class="hero-title">Join Our Team</h1>
+                <p class="hero-subtitle">
+                    Create your employee account to start tracking attendance, 
+                    manage your schedule, and access company resources.
+                </p>
+                
+                <div class="circle-container">
+                    <div class="circle-btn" id="createAccountBtn">
+                        <i class="fas fa-user-plus"></i>
+                        <div class="circle-btn-text">Create<br>Account</div>
+                    </div>
+                    <div class="circle-label">Click to register as new employee</div>
+                </div>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Easy account setup</li>
+                    <li><i class="fas fa-check-circle"></i> Secure login system</li>
+                    <li><i class="fas fa-check-circle"></i> Real-time tracking</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7 access</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                <p>© 2026 Nexus Employee Portal. All rights reserved.</p>
+            </div>
+        </div>
+
+        <!-- Right Panel - Login Form -->
+        <div class="right-panel" id="rightPanel">
+            <div class="auth-container">
+                <div class="login-header">
+                    <div class="header-title-row">
+                        <div class="header-icon">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h1 class="login-title">Employee Login</h1>
+                    </div>
+                    <p class="login-subtitle">Welcome back. Enter your credentials to access your dashboard.</p>
+                </div>
+
+                <div class="alert" id="loginAlert"></div>
+                <div id="alert" style="display:none;"></div>
+
+                <div class="glass-form">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" class="form-input" id="email" placeholder="employee@company.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" class="form-input" id="password" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Security Answer</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-shield-alt input-icon"></i>
+                                <input type="text" class="form-input" id="security-answer" placeholder="Your security answer" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">One-Time Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key input-icon"></i>
+                                <input type="text" class="form-input" id="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                            </div>
+                            <button type="button" class="btn-secondary" id="request-otp" style="margin-top: 1rem; width: 100%;">
+                                <i class="fas fa-paper-plane"></i>
+                                Send OTP to Email
+                            </button>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="loginBtn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login to Dashboard
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page (Hidden Initially) -->
+    <div class="page-container" id="signupPage" style="display: none; position: fixed; top: 0; left: 0; width: 100%;">
+        <!-- Left Panel - Progress Steps -->
+        <div class="left-panel" id="signupLeftPanel">
+            <div class="nav-bar">
+                <div class="back-btn" id="backToLoginBtn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Login
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <div class="progress-steps">
+                    <div class="progress-line"></div>
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    <div class="progress-step active" id="step1">1</div>
+                    <div class="progress-step" id="step2">2</div>
+                    <div class="progress-step" id="step3">3</div>
+                </div>
+                
+                <h1 class="hero-title" id="signupTitle">Personal Information</h1>
+                <p class="hero-subtitle" id="signupSubtitle">
+                    Fill in your details to create your employee account
+                </p>
+                
+                <!-- Step Indicators -->
+                <div id="signupStepIndicators" style="margin-top: 3rem; text-align: left; max-width: 300px; margin-left: auto; margin-right: auto;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--accent-teal); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span style="color: var(--text-primary); font-weight: 500;">Personal Details</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; opacity: 0.5;">
+                        <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--text-secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <span style="color: var(--text-secondary); font-weight: 500;">Security Setup</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem; opacity: 0.5;">
+                        <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--text-secondary); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem;">
+                            <i class="fas fa-face-smile"></i>
+                        </div>
+                        <span style="color: var(--text-secondary); font-weight: 500;">Face Enrollment</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>Step 1 of 3: Personal Information</p>
+            </div>
+        </div>
+
+        <!-- Right Panel - Signup Form -->
+        <div class="right-panel" id="signupRightPanel">
+            <div class="auth-container">
+                <div class="alert" id="signupAlert"></div>
+
+                <div class="glass-form">
+                    <form id="signup-form">
+                        <input type="hidden" id="face-image-data" name="face_image">
+                        <!-- Step 1: Personal Information -->
+                        <div id="signupStep1">
+                            <h3 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center; background: linear-gradient(135deg, var(--accent-blue), #266DD3); -webkit-background-clip: text; background-clip: text; color: transparent;">Personal Information</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input type="text" class="form-input" id="full-name" placeholder="John Doe" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-envelope input-icon"></i>
+                                    <input type="email" class="form-input" id="signup-email" placeholder="john.doe@company.com" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">CNIC Number</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-id-card input-icon"></i>
+                                    <input type="text" class="form-input" id="cnic" placeholder="XXXXX-XXXXXXX-X" required>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn-primary" id="nextStep1Btn">
+                                Next: Security Details
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: Security Details -->
+                        <div id="signupStep2" style="display: none;">
+                            <h3 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center; background: linear-gradient(135deg, var(--accent-blue), #266DD3); -webkit-background-clip: text; background-clip: text; color: transparent;">Security Setup</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Security Question</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-question-circle input-icon"></i>
+                                    <select class="form-input" id="security-question-1" required>
+                                        <option value="">Select security question</option>
+                                        <option value="What was the name of your favorite childhood teacher?">Favorite childhood teacher</option>
+                                        <option value="What is the name of the street you grew up on?">Childhood street name</option>
+                                        <option value="What was your first concert or live performance?">First concert attended</option>
+                                        <option value="What is the model of your first car?">First car model</option>
+                                        <option value="What is the name of your favorite fictional character?">Favorite fictional character</option>
+                                        <option value="What was your childhood nickname?">Childhood nickname</option>
+                                        <option value="What is the name of your favorite sports team?">Favorite sports team</option>
+                                        <option value="What is your grandmother's maiden name?">Grandmother's maiden name</option>
+                                        <option value="What is the name of your first pet?">Name of your first pet</option>
+                                        <option value="In what city were you born?">City where you were born</option>
+                                        <option value="What is your mother's middle name?">Mother's middle name</option>
+                                        <option value="What was the name of your elementary school?">Name of elementary school</option>
+                                        <option value="What is the name of the company where you had your first job?">First job company name</option>
+                                        <option value="What is your favorite movie?">Favorite movie</option>
+                                        <option value="What is your favorite food?">Favorite food</option>
+                                        <option value="What is the name of your best friend from childhood?">Childhood best friend's name</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Answer</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-key input-icon"></i>
+                                    <input type="text" class="form-input" id="security-answer-1" placeholder="Your answer" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-lock input-icon"></i>
+                                    <input type="password" class="form-input" id="signup-password" placeholder="Create a secure password" required>
+                                </div>
+                                
+                                <div class="password-requirements">
+                                    <div class="requirements-grid">
+                                        <div class="password-requirement" id="req-length">
+                                            <i class="fas fa-circle"></i>
+                                            <span>10+ characters</span>
+                                        </div>
+                                        <div class="password-requirement" id="req-uppercase">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Uppercase letter</span>
+                                        </div>
+                                        <div class="password-requirement" id="req-lowercase">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Lowercase letter</span>
+                                        </div>
+                                        <div class="password-requirement" id="req-number">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Number</span>
+                                        </div>
+                                        <div class="password-requirement" id="req-special">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Special character</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                                <button type="button" class="btn-tertiary" id="prevStep2Btn" style="flex: 1;">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back
+                                </button>
+                                <button type="button" class="btn-primary" id="nextStep2Btn" style="flex: 2;">
+                                    Next: Face Enrollment
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Biometric Enrollment -->
+                        <div id="signupStep3" style="display: none;">
+                            <div class="biometric-section">
+                                <div class="biometric-header">
+                                    <div class="biometric-icon">
+                                        <i class="fas fa-face-smile"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="biometric-title">Face Enrollment</h3>
+                                        <p class="biometric-subtitle">Capture your face for secure biometric authentication</p>
+                                    </div>
+                                </div>
+
+                                <div class="biometric-capture">
+                                    <video id="faceVideoRight" class="biometric-video" autoplay playsinline></video>
+                                    <img id="capturedFaceImage" class="biometric-video" style="display: none; object-fit: cover;">
+                                    
+                                    <button type="button" class="btn-primary" id="startCameraBtnRight">
+                                        <i class="fas fa-camera"></i>
+                                        Enable Camera
+                                    </button>
+                                    
+                                    <button type="button" class="btn-primary" id="captureFaceBtnRight" style="display: none; margin-top: 1rem;">
+                                        <i class="fas fa-camera"></i>
+                                        Capture Face
+                                    </button>
+                                    
+                                    <div class="capture-status" id="captureStatus">
+                                        <i class="fas fa-check-circle"></i>
+                                        Face captured successfully!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; background: rgba(0, 209, 160, 0.08); border: 1px solid rgba(0, 209, 160, 0.2); border-radius: 14px; padding: 1.5rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-info-circle" style="color: var(--accent-teal); font-size: 1.2rem;"></i>
+                                    <h4 style="color: var(--text-primary); font-weight: 600;">Privacy Notice</h4>
+                                </div>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">
+                                    Your facial data is encrypted and stored securely. It will only be used for authentication purposes and will never be shared with third parties. You can delete your biometric data at any time from your account settings.
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                                <button type="button" class="btn-tertiary" id="prevStep3Btn" style="flex: 1;">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back
+                                </button>
+                                <button type="submit" class="btn-primary" id="submitSignupBtn" style="flex: 2;" disabled>
+                                    <i class="fas fa-user-plus"></i>
+                                    Create Employee Account
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const signupPage = document.getElementById('signupPage');
+        const createAccountBtn = document.getElementById('createAccountBtn');
+        const backToLoginBtn = document.getElementById('backToLoginBtn');
+        const backBtn = document.getElementById('backBtn');
+        
+        // Signup steps
+        const signupStep1 = document.getElementById('signupStep1');
+        const signupStep2 = document.getElementById('signupStep2');
+        const signupStep3 = document.getElementById('signupStep3');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const progressFill = document.getElementById('progressFill');
+        const signupTitle = document.getElementById('signupTitle');
+        const signupSubtitle = document.getElementById('signupSubtitle');
+        
+        // Buttons
+        const nextStep1Btn = document.getElementById('nextStep1Btn');
+        const prevStep2Btn = document.getElementById('prevStep2Btn');
+        const nextStep2Btn = document.getElementById('nextStep2Btn');
+        const prevStep3Btn = document.getElementById('prevStep3Btn');
+        const submitSignupBtn = document.getElementById('submitSignupBtn');
+        
+        // Form inputs
+        const signupPassword = document.getElementById('signup-password');
+        
+        // Biometric elements
+        const startCameraBtnRight = document.getElementById('startCameraBtnRight');
+        const captureFaceBtnRight = document.getElementById('captureFaceBtnRight');
+        const faceVideoRight = document.getElementById('faceVideoRight');
+        const captureStatus = document.getElementById('captureStatus');
+        
+        // Alerts
+        const loginAlert = document.getElementById('loginAlert');
+        const signupAlert = document.getElementById('signupAlert');
+        
+        // State
+        let currentStep = 1;
+        let capturedFaceDataRight = null;
+        let cameraStream = null;
+        
+        // Show alert function
+        function showPageAlert(message, type = 'success', isSignup = false) {
+            const targetAlert = isSignup ? signupAlert : loginAlert;
+            targetAlert.textContent = message;
+            targetAlert.className = `alert alert-${type}`;
+            targetAlert.style.display = 'flex';
+            
+            setTimeout(() => {
+                targetAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Create Account Button - Animate to Signup
+        createAccountBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Animate login page sliding out
+            loginPage.classList.add('page-slide-left');
+            
+            // Wait for animation to complete
+            setTimeout(() => {
+                loginPage.style.display = 'none';
+                signupPage.style.display = 'flex';
+                signupPage.classList.add('page-slide-right');
+                
+                // Reset to step 1
+                showSignupStep(1);
+            }, 800);
+        });
+        
+        // Back to Login Button
+        backToLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Animate signup page sliding out
+            signupPage.classList.remove('page-slide-right');
+            signupPage.classList.add('page-slide-left');
+            
+            // Wait for animation to complete
+            setTimeout(() => {
+                signupPage.style.display = 'none';
+                loginPage.style.display = 'flex';
+                loginPage.classList.remove('page-slide-left');
+                
+                // Reset signup form
+                resetSignupForm();
+            }, 800);
+        });
+        
+        // Signup step navigation
+        nextStep1Btn.addEventListener('click', () => {
+            // Validate step 1
+            const fullName = document.getElementById('full-name').value;
+            const email = document.getElementById('signup-email').value;
+            const cnic = document.getElementById('cnic').value;
+            
+            if (!fullName || !email || !cnic) {
+                showPageAlert('Please fill all required fields', 'error', true);
+                return;
+            }
+            
+            // Update progress indicators
+            const indicators = document.getElementById('signupStepIndicators').children;
+            indicators[1].style.opacity = '1';
+            indicators[1].children[0].style.background = 'var(--accent-teal)';
+            indicators[2].style.opacity = '0.5';
+            
+            showSignupStep(2);
+        });
+        
+        prevStep2Btn.addEventListener('click', () => {
+            // Update progress indicators
+            const indicators = document.getElementById('signupStepIndicators').children;
+            indicators[1].style.opacity = '0.5';
+            indicators[1].children[0].style.background = 'var(--text-secondary)';
+            indicators[2].style.opacity = '0.5';
+            
+            showSignupStep(1);
+        });
+        
+        nextStep2Btn.addEventListener('click', () => {
+            // Validate step 2
+            const securityQuestion1 = document.getElementById('security-question-1').value;
+            const securityAnswer1 = document.getElementById('security-answer-1').value;
+            const password = signupPassword.value;
+            
+            if (!securityQuestion1 || !securityAnswer1 || !password) {
+                showPageAlert('Please fill all required fields', 'error', true);
+                return;
+            }
+            
+            // Validate password requirements
+            const passwordRequirements = {
+                'req-length': /^.{10,}$/,
+                'req-uppercase': /[A-Z]/,
+                'req-lowercase': /[a-z]/,
+                'req-number': /[0-9]/,
+                'req-special': /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+            };
+            
+            let allMet = true;
+            for (let pattern of Object.values(passwordRequirements)) {
+                if (!pattern.test(password)) {
+                    allMet = false;
+                    break;
+                }
+            }
+            
+            if (!allMet) {
+                showPageAlert('Please meet all password requirements', 'error', true);
+                return;
+            }
+            
+            // Update progress indicators
+            const indicators = document.getElementById('signupStepIndicators').children;
+            indicators[2].style.opacity = '1';
+            indicators[2].children[0].style.background = 'var(--accent-teal)';
+            
+            showSignupStep(3);
+        });
+        
+        prevStep3Btn.addEventListener('click', () => {
+            // Update progress indicators
+            const indicators = document.getElementById('signupStepIndicators').children;
+            indicators[2].style.opacity = '0.5';
+            indicators[2].children[0].style.background = 'var(--text-secondary)';
+            
+            showSignupStep(2);
+        });
+        
+        // Show specific signup step
+        function showSignupStep(step) {
+            currentStep = step;
+            
+            // Update progress bar
+            const progressPercentage = ((step - 1) / 2) * 100;
+            progressFill.style.width = `calc(${progressPercentage}% - ${40 * (progressPercentage/100)}px)`;
+            
+            // Update step indicators
+            [step1, step2, step3].forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+                
+                if (index + 1 < step) {
+                    stepEl.classList.add('completed');
+                } else if (index + 1 === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+            
+            // Update title and subtitle
+            const titles = [
+                'Personal Information',
+                'Security Setup',
+                'Face Enrollment'
+            ];
+            
+            const subtitles = [
+                'Fill in your details to create your employee account',
+                'Set up security questions and a strong password',
+                'Capture your face for secure biometric authentication'
+            ];
+            
+            signupTitle.textContent = titles[step - 1];
+            signupSubtitle.textContent = subtitles[step - 1];
+            
+            // Update footer
+            document.querySelector('#signupLeftPanel .footer p').textContent = `Step ${step} of 3: ${titles[step - 1]}`;
+            
+            // Show/hide steps
+            signupStep1.style.display = step === 1 ? 'block' : 'none';
+            signupStep2.style.display = step === 2 ? 'block' : 'none';
+            signupStep3.style.display = step === 3 ? 'block' : 'none';
+        }
+        
+        // Reset signup form
+        function resetSignupForm() {
+            currentStep = 1;
+            progressFill.style.width = '0%';
+            
+            // Reset steps
+            step1.classList.add('active');
+            step1.classList.remove('completed');
+            step2.classList.remove('active', 'completed');
+            step3.classList.remove('active', 'completed');
+            
+            // Reset form
+            document.getElementById('signup-form').reset();
+            capturedFaceDataRight = null;
+            
+            // Reset biometric
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            faceVideoRight.style.display = 'none';
+            const capturedImg = document.getElementById('capturedFaceImage');
+            if (capturedImg) capturedImg.style.display = 'none';
+            
+            startCameraBtnRight.style.display = 'block';
+            captureFaceBtnRight.style.display = 'none';
+            captureStatus.style.display = 'none';
+            submitSignupBtn.disabled = true;
+            
+            // Reset password requirements
+            document.querySelectorAll('.password-requirement').forEach(req => {
+                req.classList.remove('met');
+            });
+            
+            // Reset progress indicators
+            const indicators = document.getElementById('signupStepIndicators').children;
+            Array.from(indicators).forEach((el, index) => {
+                if (index > 0) {
+                    el.style.opacity = '0.5';
+                    el.children[0].style.background = 'var(--text-secondary)';
+                }
+            });
+            
+            showSignupStep(1);
+        }
+        
+        // Password validation
+        const passwordRequirements = {
+            'req-length': /^.{10,}$/,
+            'req-uppercase': /[A-Z]/,
+            'req-lowercase': /[a-z]/,
+            'req-number': /[0-9]/,
+            'req-special': /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/
+        };
+        
+        function validateSignupPassword() {
+            const password = signupPassword.value;
+            
+            Object.keys(passwordRequirements).forEach(reqId => {
+                const requirement = document.getElementById(reqId);
+                if (requirement) {
+                    const isValid = passwordRequirements[reqId].test(password);
+                    
+                    if (isValid) {
+                        requirement.classList.add('met');
+                    } else {
+                        requirement.classList.remove('met');
+                    }
+                }
+            });
+            
+            // Enable/disable next button in step 2
+            let allMet = true;
+            for (let pattern of Object.values(passwordRequirements)) {
+                if (!pattern.test(password)) {
+                    allMet = false;
+                    break;
+                }
+            }
+            
+            // Also require face capture for final submit
+            if (currentStep === 3) {
+                submitSignupBtn.disabled = !allMet || !capturedFaceDataRight;
+            }
+        }
+        
+        signupPassword.addEventListener('input', validateSignupPassword);
+        signupPassword.addEventListener('focus', validateSignupPassword);
+        
+        // Form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!capturedFaceDataRight) {
+                showPageAlert('Please capture your face for biometric enrollment', 'error', true);
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitSignupBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+            try {
+                const fullName = document.getElementById('full-name').value;
+                const email = document.getElementById('signup-email').value;
+                const cnic = document.getElementById('cnic').value;
+                const securityQuestion = document.getElementById('security-question-1').value;
+                const securityAnswer = document.getElementById('security-answer-1').value;
+                const password = document.getElementById('signup-password').value;
+
+                const payload = {
+                    full_name: fullName,
+                    email: email,
+                    cnic: cnic,
+                    security_question: securityQuestion,
+                    security_answer: securityAnswer,
+                    password: password,
+                    face_image: capturedFaceDataRight
+                };
+
+                const response = await fetch(`${API_BASE}/api/employee/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showPageAlert('Account created successfully! You can now login.', 'success', true);
+                    
+                    // Switch to login page after delay
+                    setTimeout(() => {
+                        backToLoginBtn.click();
+                    }, 3000);
+                } else {
+                    showPageAlert(data.detail || 'Registration failed. Please try again.', 'error', true);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                showPageAlert('Network error. Please check your connection.', 'error', true);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
+        });
+        
+        // Login form submission
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const securityAnswer = document.getElementById('security-answer').value;
+            const otp = document.getElementById('otp').value;
+            
+            if (!email || !password || !securityAnswer || !otp) {
+                showPageAlert('Please fill all required fields', 'error');
+                return;
+            }
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const originalBtnText = loginBtn.innerHTML;
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        security_answer: securityAnswer,
+                        otp: otp
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store token and user info
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('role', data.role);
+                    localStorage.setItem('email', email);
+                    if (data.employee_id) {
+                        localStorage.setItem('employee_id', data.employee_id);
+                    }
+                    
+                    showPageAlert('Login successful! Redirecting to dashboard...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'employee_dashboard.html';
+                    }, 1000);
+                } else {
+                    showPageAlert(data.detail || 'Login failed. Please check your credentials.', 'error');
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = originalBtnText;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showPageAlert('Network error. Please check your connection.', 'error');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = originalBtnText;
+            }
+        });
+        
+        // OTP request
+        document.getElementById('request-otp').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            
+            if (!email) {
+                showPageAlert('Please enter your email first', 'error');
+                return;
+            }
+            
+            const otpBtn = document.getElementById('request-otp');
+            const originalBtnText = otpBtn.innerHTML;
+            otpBtn.disabled = true;
+            otpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/request-otp?email=${encodeURIComponent(email)}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showPageAlert('OTP sent to your email address', 'success');
+                } else {
+                    showPageAlert(data.detail || 'Failed to send OTP', 'error');
+                }
+            } catch (error) {
+                console.error('OTP error:', error);
+                showPageAlert('Network error. Please check your connection.', 'error');
+            } finally {
+                otpBtn.disabled = false;
+                otpBtn.innerHTML = originalBtnText;
+            }
+        });
+        
+        // Back button
+        backBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'role-select.html';
+        });
+        
+        // Biometric camera initialization
+        startCameraBtnRight.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: 'user' 
+                    } 
+                });
+                
+                cameraStream = stream;
+                faceVideoRight.srcObject = stream;
+                faceVideoRight.style.display = 'block';
+                startCameraBtnRight.style.display = 'none';
+                captureFaceBtnRight.style.display = 'block';
+                
+            } catch (error) {
+                showPageAlert('Failed to access camera: ' + error.message, 'error', true);
+            }
+        });
+        
+        // Capture face
+        captureFaceBtnRight.addEventListener('click', () => {
+            // Ensure video is playing and has dimensions
+            if (faceVideoRight.readyState !== 4 || faceVideoRight.videoWidth === 0) {
+                showPageAlert('Camera not ready yet. Please wait.', 'error', true);
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = faceVideoRight.videoWidth;
+            canvas.height = faceVideoRight.videoHeight;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw the current video frame to the canvas
+            ctx.drawImage(faceVideoRight, 0, 0, canvas.width, canvas.height);
+            
+            capturedFaceDataRight = canvas.toDataURL('image/png');
+            window.capturedFaceData = capturedFaceDataRight;
+            
+            // Verify data was captured
+            if (!capturedFaceDataRight || capturedFaceDataRight === 'data:,') {
+                showPageAlert('Failed to capture image. Please try again.', 'error', true);
+                return;
+            }
+            
+            // Stop camera
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            
+            faceVideoRight.style.display = 'none';
+            
+            // Show captured image
+            const capturedImg = document.getElementById('capturedFaceImage');
+            if (capturedImg) {
+                capturedImg.src = capturedFaceDataRight;
+                capturedImg.style.display = 'block';
+            }
+
+            captureFaceBtnRight.style.display = 'none';
+            captureStatus.style.display = 'flex';
+            
+            // Enable signup button if password is valid
+            validateSignupPassword();
+            
+            showPageAlert('Face captured successfully!', 'success', true);
+        });
+    </script>
+    
+    <script src="js/config.js"></script>
+    <script src="js/biometric.js"></script>
+    <script src="js/biometric-login.js"></script>
+    <script src="js/employee-auth.js?v=1.2"></script>
+</body>
+</html>
